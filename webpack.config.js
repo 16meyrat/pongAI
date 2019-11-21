@@ -9,6 +9,11 @@ module.exports = {
     watchContentBase: true,
     overlay: true,
   },
+  externals: {
+    neataptic: {
+      root: 'neataptic',
+    }
+  },
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),

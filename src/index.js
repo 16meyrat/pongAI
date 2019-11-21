@@ -1,5 +1,6 @@
 import p5 from "p5";
 
+import Evolution from "./evolution";
 import Pong from "./pong";
 import {HumanPlayer} from "./player";
 
@@ -24,3 +25,19 @@ let s = (sk) => {
 }
 
 const P5 = new p5(s);
+
+const evo = new Evolution();
+
+
+window.nextGeneration = () => {
+  evo.evaluate();
+  evo.nextGeneration();
+}
+
+window.autoEvolve = () => {
+
+}
+
+window.challengeHuman = () => {
+
+}
