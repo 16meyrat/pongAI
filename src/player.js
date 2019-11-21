@@ -1,9 +1,9 @@
 import p5 from "p5";
 
 const PLAYER_HEIGHT = 0.1;
-const PLAYER_WIDTH = 0.05;
-const MAX_SPEED = 0.001;
-const ACCELERATION = 0.000001;
+const PLAYER_WIDTH = 0.01;
+const MAX_SPEED = 0.0015;
+const ACCELERATION = 0.000002;
 
 class Player {
     constructor(position){
@@ -18,17 +18,22 @@ class Player {
 
         this.position.y += this.speed * deltatime;
 
-        if (this.position.y < PLAYER_HEIGHT / 2 ) {
-            this.position.y = PLAYER_HEIGHT / 2;
+        if (this.position.y < PLAYER_HEIGHT ) {
+            this.position.y = PLAYER_HEIGHT;
             this.speed = 0;
-        }else if(this.position.y > 1 - PLAYER_HEIGHT / 2){
-            this.position.y = 1 - PLAYER_HEIGHT / 2;
+        }else if(this.position.y > 1 - PLAYER_HEIGHT){
+            this.position.y = 1 - PLAYER_HEIGHT;
             this.speed = 0;
         }
     }
 
     render(sk){
         sk.rect(sk.width * this.position.x, sk.height * this.position.y, PLAYER_WIDTH * sk.width, PLAYER_HEIGHT * sk.height);
+    }
+
+    collide(ballPosition, ballRadius){
+        return ballPosition.x - ballRadius < this.position.x + PLAYER_WIDTH && ballPosition.x + ballRadius > this.position.x - PLAYER_WIDTH && 
+            ballPosition.y - ballRadius < this.position.y + PLAYER_HEIGHT && ballPosition.y + ballRadius > this.position.y - PLAYER_HEIGHT;
     }
 }
 
@@ -39,14 +44,13 @@ export class HumanPlayer extends Player {
         super(position);
     }
 
-    update(game, deltatime, inputs) {
-        super.update(game, deltatime);
-        if (inputs){
-            if (inputs.up_arrow) {
-                this.speed -= ACCELERATION * deltatime;
-            }else if (inputs.down_arrow) {
-                this.speed += ACCELERATION * deltatime;
-            }
+    render(sk){
+        super.render(sk);
+        if (sk.keyIsDown(sk.UP_ARROW)){
+            this.speed -= ACCELERATION * sk.deltaTime;
+        }
+        if (sk.keyIsDown(sk.DOWN_ARROW)){
+            this.speed += ACCELERATION * sk.deltaTime;
         }
     }
 }

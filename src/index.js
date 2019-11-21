@@ -12,20 +12,13 @@ let s = (sk) => {
   sk.setup = () => {
     let canvas = sk.createCanvas(500, 500);
     canvas.parent("canvas-container");
-    sk.rectMode(sk.CENTER);
-    sk.frameRate(60);
+    sk.rectMode(sk.RADIUS);
+    sk.frameRate(30);
   }
   
   sk.draw = () => {
     sk.clear();
-    const inputs = {};
-    if (sk.keyIsDown(sk.UP_ARROW)){
-      inputs.up_arrow = true;
-    }
-    if (sk.keyIsDown(sk.DOWN_ARROW)){
-      inputs.down_arrow = true;
-    }
-    game.update(sk.deltaTime, inputs);
+    game.update(sk.deltaTime);
     game.render(sk);
   }
 }
