@@ -1,14 +1,15 @@
 import p5 from "p5";
+import Plotly from "plotly.js-dist";
 
 import Evolution from "./evolution";
 import Pong from "./pong";
-import {HumanPlayer} from "./player";
+import _ from "lodash";
+import {HumanPlayer, AIPlayer} from "./player";
+
+
+var game = null;
 
 let s = (sk) => {    
-
-  const player1 = new HumanPlayer(new p5.Vector(0.05, 0.5));
-  const player2 = new HumanPlayer(new p5.Vector(1 - 0.05, 0.5));
-  const  game = new Pong(player1, player2);
 
   sk.setup = () => {
     let canvas = sk.createCanvas(500, 500);
@@ -19,8 +20,10 @@ let s = (sk) => {
   
   sk.draw = () => {
     sk.clear();
-    game.update(sk.deltaTime);
-    game.render(sk);
+    if (game){
+      game.update(sk.deltaTime);
+      game.render(sk);
+    }
   }
 }
 
@@ -28,10 +31,38 @@ const P5 = new p5(s);
 
 const evo = new Evolution();
 
+const avgScores = [];
+const bestScores = [];
+const generations = [];
+
 
 window.nextGeneration = () => {
+  if (evo.neat.generation > 0){
+    evo.nextGeneration();
+  }
+
   evo.evaluate();
-  evo.nextGeneration();
+
+  const fittest = evo.neat.getFittest();
+
+  document.getElementById("generationNb").textContent=evo.neat.generation;
+  document.getElementById("avgScore").textContent=evo.neat.getAverage();
+  document.getElementById("bestScore").textContent=fittest.score;
+
+  generations.push(evo.neat.generation);
+  avgScores.push(evo.neat.getAverage());
+  bestScores.push(fittest.score);
+  plotScores();
+
+  drawGraph(fittest.graph(500, 500), ".draw");
+  console.log(fittest);
+  setTimeout(() => {
+    const player1 = new AIPlayer(new p5.Vector(0.05, 0.5), _.cloneDeep(fittest));
+    const player2 = new AIPlayer(new p5.Vector(1 - 0.05, 0.5), _.cloneDeep(fittest));
+    game = new Pong(player1, player2);
+  }, 500);
+
+  evo.neat.generation++;
 }
 
 window.autoEvolve = () => {
@@ -39,5 +70,25 @@ window.autoEvolve = () => {
 }
 
 window.challengeHuman = () => {
+  const player2 = new AIPlayer(new p5.Vector(1 - 0.05, 0.5), _.cloneDeep(evo.neat.getFittest()));
+  const player1 = new HumanPlayer(new p5.Vector(0.05, 0.5));
+  game = new Pong(player1, player2);
+}
 
+function plotScores(){
+  let avgScore = {
+    x: generations,
+    y: avgScores,
+    mode: 'lines+markers',
+    type: 'scatter'
+  };
+
+  let bestScore = {
+    x: generations,
+    y: bestScores,
+    mode: 'lines+markers',
+    type: 'scatter'
+  };
+
+  Plotly.newPlot('plot', [avgScore, bestScore]);
 }

@@ -9,7 +9,7 @@ class Pong {
         this.player2 = player2;
 
         this.ballPosition = new p5.Vector(0.5, 0.5);
-        this.ballSpeed = new p5.Vector((Math.random() - 0.5) * MAX_SPEED, (Math.random() - 0.5 ) * MAX_SPEED);
+        this.ballSpeed = new p5.Vector((Math.random() > 0.5 ? 1 : -1) * MAX_SPEED, (Math.random() - 0.5 ) * MAX_SPEED);
         this.score = 0;
     }
 
@@ -35,14 +35,14 @@ class Pong {
 
         if (this.player1.collide(this.ballPosition, BALL_RADIUS) && this.ballSpeed.x < 0){
             this.ballSpeed.x = Math.abs(this.ballSpeed.x);
-            const newSpeed = 0.1 * this.player1.speed;
+            const newSpeed = this.ballSpeed.y + 0.1 * this.player1.speed;
             if (Math.abs(newSpeed < MAX_SPEED)){
                 this.ballSpeed.y = newSpeed;
             }
             this.score++;
         } else if(this.player2.collide(this.ballPosition, BALL_RADIUS) && this.ballSpeed.x > 0){
             this.ballSpeed.x = -Math.abs(this.ballSpeed.x);
-            const newSpeed = 0.1 * this.player2.speed;
+            const newSpeed = this.ballSpeed.y + 0.1 * this.player2.speed;
             if (Math.abs(newSpeed < MAX_SPEED)){
                 this.ballSpeed.y = newSpeed;
             }

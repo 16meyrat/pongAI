@@ -44,10 +44,10 @@ export class HumanPlayer extends Player {
 
     render(sk){
         super.render(sk);
-        if (sk.keyIsDown(sk.UP_ARROW)){
+        if (sk.keyIsDown(90)){
             this.speed -= ACCELERATION * sk.deltaTime;
         }
-        if (sk.keyIsDown(sk.DOWN_ARROW)){
+        if (sk.keyIsDown(83)){
             this.speed += ACCELERATION * sk.deltaTime;
         }
     }
@@ -62,11 +62,11 @@ export class AIPlayer extends Player {
     update(game, deltatime){
         super.update(game, deltatime);
 
-        let normalizedBallPosition = game.ballPosition;
-        let normalizedBallSpeed = game.ballSpeed;
+        let normalizedBallPosition = {...game.ballPosition};
+        let normalizedBallSpeed = {...game.ballSpeed};
         if (this.position.x > 0.5) {
             normalizedBallPosition.x = 1 - normalizedBallPosition.x;
-            normalizedBallSpeed.x = - normalizedBallSpeed;
+            normalizedBallSpeed.x = -normalizedBallSpeed.x;
         }
 
         let otherPlayer = game.player1 === this ? game.player2 : game.player1;

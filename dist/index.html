@@ -2,16 +2,34 @@
 <html>
   <head>
     <title>Pong AI</title>
+    <link rel="stylesheet" type="text/css" href="/libs/graph.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
   </head>
   <body>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="libs/webcola.js"></script>
+    <script src="libs/graph.js"></script>
     <script src="https://cdn.rawgit.com/wagenaartje/neataptic/14736f72/dist/neataptic.min.js"></script>
+
     <script src="main.js"></script>
+
+  <div class="container">
   <div id="canvas-container">
+  </div>
+  <div>
+      <svg class="draw" width="500px" height="500px"></svg>
+  </div>
+  </div>
+  <div id="displats">
+    <div>Generation <span id="generationNb"/></div>
+    <div>Average score <span id="avgScore"/></div>
+    <div>Best score <span id="bestScore"/></div>
   </div>
   <div id="controls">
     <button onclick="nextGeneration()">Next generation</button>
     <button onclick="autoEvolve()">Run</button>
     <button onclick="challengeHuman()">Challenge fittest</button>
   </div>
+  <div id="plot" />
   </body>
 </html>
