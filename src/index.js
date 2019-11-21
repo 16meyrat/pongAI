@@ -5,8 +5,8 @@ import {HumanPlayer} from "./player";
 
 let s = (sk) => {    
 
-  const player1 = new HumanPlayer(new p5.Vector(0.05, 0));
-  const player2 = new HumanPlayer(new p5.Vector(1 - 0.05, 0));
+  const player1 = new HumanPlayer(new p5.Vector(0.05, 0.5));
+  const player2 = new HumanPlayer(new p5.Vector(1 - 0.05, 0.5));
   const  game = new Pong(player1, player2);
 
   sk.setup = () => {

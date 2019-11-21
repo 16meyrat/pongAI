@@ -5,7 +5,7 @@ const PLAYER_WIDTH = 0.01;
 const MAX_SPEED = 0.0015;
 const ACCELERATION = 0.000002;
 
-class Player {
+export default class Player {
     constructor(position){
         this.position = position;
         this.speed = 0;
@@ -37,8 +37,6 @@ class Player {
     }
 }
 
-export default Player;
-
 export class HumanPlayer extends Player {
     constructor(position){
         super(position);
@@ -52,5 +50,38 @@ export class HumanPlayer extends Player {
         if (sk.keyIsDown(sk.DOWN_ARROW)){
             this.speed += ACCELERATION * sk.deltaTime;
         }
+    }
+}
+
+export class AIPlayer extends Player {
+    constructor(position, brain){
+        super(position);
+        this.brain = brain;
+    }
+
+    update(game, deltatime){
+        super.update(game, deltatime);
+
+        let normalizedBallPosition = game.ballPosition;
+        let normalizedBallSpeed = game.ballSpeed;
+        if (this.position.x > 0.5) {
+            normalizedBallPosition.x = 1 - normalizedBallPosition.x;
+            normalizedBallSpeed.x = - normalizedBallSpeed;
+        }
+
+        let otherPlayer = game.player1 === this ? game.player2 : game.player1;
+
+        const inputs = this.brain.activate([
+            normalizedBallPosition.x, 
+            normalizedBallPosition.y, 
+            normalizedBallSpeed.x, 
+            normalizedBallSpeed.y,
+            this.position.y,
+            this.speed,
+            otherPlayer.position.y,
+            otherPlayer.speed,
+        ]);
+
+        this.speed += ACCELERATION * inputs[0] * deltatime;
     }
 }

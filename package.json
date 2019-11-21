@@ -1,8 +1,9 @@
 {
   "name": "pong_ai",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple example of neuro-evolution applied to the Pong game",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --open"
@@ -10,11 +11,13 @@
   "author": "Louis Meyrat",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.6.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "neataptic": "^1.4.7",
     "p5": "^0.10.2"
   }
 }
