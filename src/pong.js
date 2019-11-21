@@ -35,9 +35,11 @@ class Pong {
 
         if (this.player1.collide(this.ballPosition, BALL_RADIUS)){
             this.ballSpeed.x = Math.abs(this.ballSpeed.x);
+            Math.max(this.ballSpeed.y += 0.1 * this.player1.speed, 0.003);
             this.score++;
         } else if(this.player2.collide(this.ballPosition, BALL_RADIUS)){
             this.ballSpeed.x = -Math.abs(this.ballSpeed.x);
+            Math.max(this.ballSpeed.y += 0.1 * this.player2.speed, 0.003);
             this.score++;
         }
 
