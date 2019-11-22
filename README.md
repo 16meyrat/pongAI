@@ -8,6 +8,7 @@ The built version is included in this repository, in the `/dist` folder. Use the
 
 ### Requierments
 - [NodeJS](https://nodejs.org)
+- Run `npm install` in this folder
 
 ### Release build
 
