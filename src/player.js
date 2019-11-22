@@ -69,8 +69,6 @@ export class AIPlayer extends Player {
             normalizedBallSpeed.x = -normalizedBallSpeed.x;
         }
 
-        let otherPlayer = game.player1 === this ? game.player2 : game.player1;
-
         const inputs = this.brain.activate([
             normalizedBallPosition.x, 
             normalizedBallPosition.y, 
@@ -78,10 +76,12 @@ export class AIPlayer extends Player {
             normalizedBallSpeed.y,
             this.position.y,
             this.speed,
-            otherPlayer.position.y,
-            otherPlayer.speed,
         ]);
 
-        this.speed += ACCELERATION * inputs[0] * deltatime;
+        if (isNaN(inputs[0])){
+            debugger;
+        }
+
+        this.speed = MAX_SPEED * inputs[0] * deltatime;
     }
 }

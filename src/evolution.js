@@ -6,14 +6,16 @@ import {AIPlayer} from "./player.js";
 const Neat = neataptic.Neat;
 const Methods = neataptic.Methods;
 
+const COMPETE_AGAINTS = 4; 
+
 export default class Evolution {
 
     // initialise population
     constructor(){
 
         const baseNetwork = new neataptic.Architect.Random(
-            2+2+2+2,
-            2,
+            2+2+2,
+            0,
             1
         )
 
@@ -21,9 +23,17 @@ export default class Evolution {
             node.squash = Methods.Activation.TANH;
         }
 
+        Methods.Mutation.MOD_ACTIVATION.allowed = [
+            Methods.Activation.TANH,
+        ];
+
+        Methods.Mutation.MOD_ACTIVATION.allowed = [
+            Methods.Activation.TANH,
+        ];
+
         this.neat = new Neat(
-            2 + 2 + 2 + 2,
-            2,
+            2 + 2 + 2,
+            1,
             null,
             {
               mutation: [
@@ -33,14 +43,10 @@ export default class Evolution {
                     Methods.Mutation.SUB_CONN,
                     Methods.Mutation.MOD_WEIGHT,
                     Methods.Mutation.MOD_BIAS,
-                    Methods.Mutation.MOD_ACTIVATION,
                     Methods.Mutation.ADD_GATE,
                     Methods.Mutation.SUB_GATE,
-                    Methods.Mutation.ADD_SELF_CONN,
-                    Methods.Mutation.SUB_SELF_CONN,
-                    Methods.Mutation.ADD_BACK_CONN,
-                    Methods.Mutation.SUB_BACK_CONN,
               ],
+              selection: Methods.Selection.TOURNAMENT,
               popsize: 40,
               mutationRate: 0.3,
               elitism: 5,
@@ -70,10 +76,10 @@ export default class Evolution {
                 let brain2 = this.neat.population[competitorIndex2];
                 brain1.utilisations++;
                 brain2.utilisations++;
-                if (brain1.utilisations >= 4){
+                if (brain1.utilisations >= COMPETE_AGAINTS){
                     availableOpponents = availableOpponents.filter((val) => val !== competitorIndex1);
                 }
-                if (brain2.utilisations >= 4){
+                if (brain2.utilisations >= COMPETE_AGAINTS){
                     availableOpponents = availableOpponents.filter((val) => val !== competitorIndex2);
                 }
 
@@ -96,14 +102,14 @@ export default class Evolution {
                 if (res.end){
                     res.winner.brain.score += game.score;
                     let other = game.other(res.winner);
-                    other.brain.score -= (30 - game.score);
+                    other.brain.score += game.score;
                     break;
                 }
             }
             // in case of draw, each player get average score
             if (game.score === 30) {
-                player1.brain.score += 15;
-                player2.brain.score += 15;
+                player1.brain.score += 30;
+                player2.brain.score += 30;
             } 
             
         }
