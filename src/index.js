@@ -69,6 +69,12 @@ window.challengeHuman = () => {
   game = new Pong(player1, player2);
 }
 
+window.playGame = () =>  {
+  const player1 = new AIPlayer(new p5.Vector(0.05, 0.5), _.cloneDeep(evo.neat.getFittest()));
+  const player2 = new AIPlayer(new p5.Vector(1 - 0.05, 0.5), _.cloneDeep(evo.neat.getFittest()));
+  game = new Pong(player1, player2);
+}
+
 const computeNextGeneration = (runGame) => {
   if (evo.neat.generation > 0) {
     evo.nextGeneration();

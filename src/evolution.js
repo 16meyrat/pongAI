@@ -6,8 +6,6 @@ import {AIPlayer} from "./player.js";
 const Neat = neataptic.Neat;
 const Methods = neataptic.Methods;
 
-const COMPETE_AGAINTS = 4; 
-
 export default class Evolution {
 
     // initialise population
@@ -48,7 +46,7 @@ export default class Evolution {
               ],
               selection: Methods.Selection.TOURNAMENT,
               popsize: 40,
-              mutationRate: 0.3,
+              mutationRate: 0.25,
               elitism: 5,
               network: baseNetwork,
             }
@@ -57,61 +55,18 @@ export default class Evolution {
 
     // evaluate all individuals by making them compete againts each other. 4 games per players
     evaluate(){
-        let availableOpponents = [];
-        for (let [index, brain] of this.neat.population.entries()){
-            brain.score = 0;
-            brain.utilisations = 0;
-            availableOpponents.push(index);
-        }
-
-        const getPlayerPair = () => {
-            if (availableOpponents.length >= 2){
-                let competitorIndex1 = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-                let competitorIndex2 = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-                while (competitorIndex1 === competitorIndex2){
-                    competitorIndex2 = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-                }
-
-                let brain1 = this.neat.population[competitorIndex1];
-                let brain2 = this.neat.population[competitorIndex2];
-                brain1.utilisations++;
-                brain2.utilisations++;
-                if (brain1.utilisations >= COMPETE_AGAINTS){
-                    availableOpponents = availableOpponents.filter((val) => val !== competitorIndex1);
-                }
-                if (brain2.utilisations >= COMPETE_AGAINTS){
-                    availableOpponents = availableOpponents.filter((val) => val !== competitorIndex2);
-                }
-
-                return [competitorIndex1, competitorIndex2];
-            } else {
-                return null;
-            }
-        }
-
-        while (availableOpponents.length >= 2){
-            let brains = getPlayerPair().map((index) => this.neat.population[index]);
-            if (!brains){
-                break;
-            }
-            const player1 = new AIPlayer(new p5.Vector(0.05, 0.5), brains[0]);
-            const player2 = new AIPlayer(new p5.Vector(1 - 0.05, 0.5), brains[1]);
+        for (let brain of this.neat.population){
+            const player1 = new AIPlayer(new p5.Vector(0.05, 0.5), brain);
+            const player2 = new AIPlayer(new p5.Vector(1 - 0.05, 0.5), brain);
             const game = new Pong(player1, player2);
             while(game.score < 30){
                 const res = game.update(33.3);
                 if (res.end){
-                    res.winner.brain.score += game.score;
-                    let other = game.other(res.winner);
-                    other.brain.score += game.score;
                     break;
                 }
             }
-            // in case of draw, each player get average score
-            if (game.score === 30) {
-                player1.brain.score += 30;
-                player2.brain.score += 30;
-            } 
-            
+            // each brain plays againts itself
+            brain.score = game.score;  
         }
     }
 
