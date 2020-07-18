@@ -17,7 +17,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "p5": "^0.10.2",
     "plotly.js-dist": "^1.51.1"
   }
